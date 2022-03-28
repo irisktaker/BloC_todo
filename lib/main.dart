@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_bloc/blocs/todos/todos_bloc.dart';
+import 'package:todo_bloc/models/todos_model.dart';
 import 'package:todo_bloc/screens/home_screen.dart';
 
 void main() {
@@ -10,16 +13,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ToDoBloC',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: const Color(0xFF000A1F),
-        appBarTheme: const AppBarTheme(
-          color: Color(0xFF000A1F),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => TodosBloc()
+            ..add(
+              LoadTodos(todos: [
+                Todo(
+                    id: "1",
+                    task: "Sample ToDo 1",
+                    description: "This is a test ToDo"),
+                Todo(
+                    id: "2",
+                    task: "Sample ToDo 2",
+                    description: "This is a test ToDo"),
+              ]),
+            ),
         ),
+      ],
+      child: MaterialApp(
+        title: 'ToDoBloC',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          primaryColor: const Color(0xFF000A1F),
+          appBarTheme: const AppBarTheme(
+            color: Color(0xFF000A1F),
+          ),
+        ),
+        home: const HomeScreen(),
       ),
-      home: const HomeScreen(),
     );
   }
 }

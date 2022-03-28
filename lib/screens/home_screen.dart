@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:todo_bloc/blocs/todos/todos_bloc.dart';
 import 'package:todo_bloc/models/todos_model.dart';
 import 'package:todo_bloc/screens/add_todo_screen.dart';
 
@@ -25,30 +28,44 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
+      body: BlocBuilder<TodosBloc, TodosState>(
+        builder: (BuildContext context, TodosState state) {
+          if (state is TodosLoading) {
+            return const CircularProgressIndicator();
+          }
+
+          if (state is TodosLoaded) {
+            return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: const Text(
-                "Pending To Dos: ",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Text(
+                      "Pending To Dos: ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    // itemCount: Todo.todos.length,
+                    itemCount: state.todos.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      // return _todoCard(Todo.todos[index]);
+                      return _todoCard(state.todos[index]);
+                    },
+                  ),
+                ],
               ),
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: Todo.todos.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _todoCard(Todo.todos[index]);
-              },
-            ),
-          ],
-        ),
+            );
+          } else {
+            return const Text("Something went wrong!");
+          }
+        },
       ),
     );
   }
