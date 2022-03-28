@@ -19,7 +19,19 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
     );
   }
 
-  void _onAddTodo(AddTodo event, Emitter<TodosState> emit) {}
+  void _onAddTodo(AddTodo event, Emitter<TodosState> emit) {
+    final state = this.state;
+
+    if (state is TodosLoaded) {
+      emit(
+        TodosLoaded(
+          todos: List.from(state.todos)..add(event.todo),
+        ),
+      );
+    }
+  }
+
   void _onDeleteTodo(DeleteTodo event, Emitter<TodosState> emit) {}
+
   void _onUpdateTodo(UpdateTodo event, Emitter<TodosState> emit) {}
 }
