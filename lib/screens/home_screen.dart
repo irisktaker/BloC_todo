@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                     itemCount: state.todos.length,
                     itemBuilder: (BuildContext context, int index) {
                       // return _todoCard(Todo.todos[index]);
-                      return _todoCard(state.todos[index]);
+                      return _todoCard(context, state.todos[index]);
                     },
                   ),
                 ],
@@ -70,7 +70,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Card _todoCard(Todo todo) {
+  Card _todoCard(BuildContext context, Todo todo) {
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: Padding(
@@ -92,7 +92,11 @@ class HomeScreen extends StatelessWidget {
                   icon: const Icon(Icons.add_task),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<TodosBloc>().add(
+                          DeleteTodo(todo: todo),
+                        );
+                  },
                   icon: const Icon(Icons.cancel),
                 ),
               ],
